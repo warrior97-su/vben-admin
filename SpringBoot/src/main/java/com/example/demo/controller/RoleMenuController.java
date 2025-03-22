@@ -10,6 +10,7 @@ import com.example.demo.entity.MenuTree;
 import com.example.demo.entity.MenuMeta;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/api/role-menu")
@@ -51,6 +52,9 @@ public class RoleMenuController {
     public Result<?> getRoleMenus(@PathVariable Long roleId) {
         // 获取角色的所有菜单
         List<Menu> menuList = roleMenuService.getRoleMenus(roleId);
+        
+        // 根据sort字段排序菜单列表
+        menuList.sort(Comparator.comparingInt(Menu::getSort));
         
         // 构建树形结构
         List<MenuTree> menuTree = new ArrayList<>();

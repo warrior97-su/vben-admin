@@ -14,6 +14,7 @@ import com.example.demo.entity.MenuTree;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/menu")
@@ -26,6 +27,9 @@ public class MenuController {
         LambdaQueryWrapper<Menu> wrapper = Wrappers.<Menu>lambdaQuery();
         wrapper.orderByAsc(Menu::getSort);
         List<Menu> list = MenuMapper.selectList(wrapper);
+        
+        // 根据sort字段排序
+        list.sort(Comparator.comparingInt(Menu::getSort));
         
         // 构建树形结构
         List<MenuTree> menuTree = new ArrayList<>();
