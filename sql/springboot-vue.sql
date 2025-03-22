@@ -8,6 +8,7 @@
  Source Schema         : springboot-vue
 
  Target Server Type    : MySQL
+
  Target Server Version : 80031
  File Encoding         : 65001
 
