@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.dto.MenuCreate;
 import com.example.demo.dto.MenuUpdate;
 import com.example.demo.entity.Menu;
@@ -11,13 +9,12 @@ import com.example.demo.mapper.MenuMapper;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.commom.Result;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import com.example.demo.entity.MenuTree;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/menu")
@@ -30,6 +27,9 @@ public class MenuController {
         LambdaQueryWrapper<Menu> wrapper = Wrappers.<Menu>lambdaQuery();
         wrapper.orderByAsc(Menu::getSort);
         List<Menu> list = MenuMapper.selectList(wrapper);
+        
+        // 根据sort字段排序
+        list.sort(Comparator.comparingInt(Menu::getSort));
         
         // 构建树形结构
         List<MenuTree> menuTree = new ArrayList<>();
@@ -54,7 +54,7 @@ public class MenuController {
         tree.setIcon(menu.getIcon());
         tree.setPid(menu.getPid());
         tree.setSort(menu.getSort());
-        
+        tree.setTitle(menu.getTitle());
         List<MenuTree> children = new ArrayList<>();
         for (Menu m : allMenus) {
             if (menu.getId().equals(m.getPid())) {
@@ -78,6 +78,7 @@ public class MenuController {
         newMenu.setIcon(menu.getIcon());
         newMenu.setPid(menu.getPid());
         newMenu.setSort(menu.getSort());
+        newMenu.setTitle(menu.getTitle());
         MenuMapper.insert(newMenu);
         return Result.success(true);
     }
@@ -103,6 +104,7 @@ public class MenuController {
         newMenu.setComponent(menu.getComponent());
         newMenu.setIcon(menu.getIcon());
         newMenu.setSort(menu.getSort());
+        newMenu.setTitle(menu.getTitle());
         MenuMapper.updateById(newMenu);
         return Result.success(true);
     }
